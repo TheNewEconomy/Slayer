@@ -23,7 +23,7 @@ This is the official continuation of the **Slayer** plugin, originally developed
 ## Installation
 
 1. Download the latest version from [SpigotMC](https://www.spigotmc.org/resources/slayer-mythic-mobs-support.102769/) or [Modrinth](https://modrinth.com/plugin/slayer).
-2. Place the `.jar` file in your server's `/plugins/` directory.
+2. Place the `.jar` file, Slayer in your server's `/plugins/` directory.
 3. Restart or reload your server to generate the default configuration files.
 4. Modify settings in `config.yml` and define mob types in `mob-types.yml`.
 5. (Optional) Integrate with **MythicMobs**, **PlaceholderAPI**, and configure storage settings if needed.

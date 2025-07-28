@@ -1,15 +1,13 @@
 package me.unfear.Slayer;
 
-import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 
 public class ShopItem implements Comparable<ShopItem> {
-
-    public static final String NBT_TAG = "slayer.shop-item-id";
 
     private final int id;
     private final String name;
@@ -20,13 +18,13 @@ public class ShopItem implements Comparable<ShopItem> {
     private final int itemAmount;
     private final int purchases;
 
-    public ShopItem(int id, String name, ArrayList<String> description, int cost, ArrayList<String> commands,
-                    Material material, int itemAmount, int purchases) {
+    public ShopItem(final int id, final String name, final ArrayList<String> description, final int cost, final ArrayList<String> commands,
+                    final Material material, final int itemAmount, final int purchases) {
         super();
         this.id = id;
         this.name = Chat.format(name);
         this.description = new ArrayList<>(description.size());
-        for (String line : description) {
+        for (final String line : description) {
             this.description.add(Chat.format(line));
         }
         this.cost = cost;
@@ -73,25 +71,22 @@ public class ShopItem implements Comparable<ShopItem> {
         final ItemMeta meta = item.getItemMeta();
         if (meta != null) {
             meta.setDisplayName(name);
-            ArrayList<String> lore = new ArrayList<>();
-            lore.addAll(description);
+            final ArrayList<String> lore = new ArrayList<>(description);
 
             lore.add("");
             lore.add(Main.inst.getLanguage().shopCost(cost));
             lore.add(Main.inst.getLanguage().clickToPurchase());
             meta.setLore(lore);
+            meta.getPersistentDataContainer().set(Main.inst.itemKey(), PersistentDataType.INTEGER, id);
+
             item.setItemMeta(meta);
         }
-
-        NBTItem nbt = new NBTItem(item);
-        nbt.setInteger(NBT_TAG, id);
-        nbt.applyNBT(item);
 
         return item;
     }
 
     @Override
-    public int compareTo(ShopItem o) {
+    public int compareTo(final ShopItem o) {
         return this.id - o.id;
     }
 }

@@ -1,7 +1,5 @@
 package me.unfear.Slayer.listeners;
 
-import de.tr7zw.changeme.nbtapi.NBTCompound;
-import de.tr7zw.changeme.nbtapi.NBTEntity;
 import me.unfear.Slayer.Language;
 import me.unfear.Slayer.Main;
 import me.unfear.Slayer.PlayerData;
@@ -14,42 +12,42 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.persistence.PersistentDataType;
 
 public class EntityDeathListener implements Listener {
     private final Language language;
     private final SlayerLoader config;
 
-    public EntityDeathListener(Language language, SlayerLoader config) {
+    public EntityDeathListener(final Language language, final SlayerLoader config) {
         this.language = language;
         this.config = config;
     }
 
-    private void sendActionBar(Player player, PlayerData data) {
+    private void sendActionBar(final Player player, final PlayerData data) {
         if (!config.isActionBarEnabled()) return;
-        int kills = data.getKills();
-        int required = data.getCurrentTask().getKills();
+        final int kills = data.getKills();
+        final int required = data.getCurrentTask().getKills();
         if (required < kills) return;
-        String text = language.actionBar(kills, required);
+        final String text = language.actionBar(kills, required);
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(text));
 
     }
 
     @EventHandler
-    void onDeath(EntityDeathEvent e) {
+    void onDeath(final EntityDeathEvent e) {
         if (e.getEntity().getKiller() == null || e.getEntity() instanceof Player) return;
 
-        Player player = e.getEntity().getKiller();
+        final Player player = e.getEntity().getKiller();
 
-        Entity entity = e.getEntity();
-        NBTCompound nbt = new NBTEntity(entity).getPersistentDataContainer();
-        Boolean fromSpawner = nbt.getBoolean(SpawnerSpawnListener.NBT_TAG);
+        final Entity entity = e.getEntity();
+        final boolean spawner = entity.getPersistentDataContainer().getOrDefault(Main.inst.entityKey(), PersistentDataType.BOOLEAN, false);
 
         final SlayerLoader loader = Main.inst.getSlayerLoader();
-        if (fromSpawner && !loader.isAllowSpawners()) return;
+        if (spawner && !loader.isAllowSpawners()) return;
 
         final PlayerData data = loader.getPlayerData(player.getUniqueId());
 
-        for (MobType mobType : Main.inst.getMobTypeLoader().getMobTypes()) {
+        for (final MobType mobType : Main.inst.getMobTypeLoader().getMobTypes()) {
             if (!mobType.isThis(entity)) continue;
             data.incrementEntityKills(mobType.getId());
             break;

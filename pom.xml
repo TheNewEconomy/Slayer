@@ -9,6 +9,11 @@
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+
+        <depend.if>0.11.2</depend.if>
+        <depend.mythic>5.9.5</depend.mythic>
+        <depend.papi>2.11.6</depend.papi>
+        <depend.server>1.20.4-R0.1-SNAPSHOT</depend.server>
     </properties>
 
     <build>
@@ -16,7 +21,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.5.1</version>
+                <version>3.6.0</version>
                 <executions>
                     <execution>
                         <id>shade</id>
@@ -29,10 +34,6 @@
                 <configuration>
                     <relocations>
                         <relocation>
-                            <pattern>de.tr7zw.changeme.nbtapi</pattern>
-                            <shadedPattern>me.unfear.Slayer.nbtapi</shadedPattern>
-                        </relocation>
-                        <relocation>
                             <pattern>com.github.stefvanschie.inventoryframework</pattern>
                             <shadedPattern>me.unfear.Slayer.inventoryframework</shadedPattern>
                         </relocation>
@@ -43,7 +44,7 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <version>3.8.1</version>
+                <version>3.14.0</version>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <source>17</source>
@@ -59,29 +60,23 @@
         <dependency>
             <groupId>com.github.stefvanschie.inventoryframework</groupId>
             <artifactId>IF</artifactId>
-            <version>0.10.8</version>
+            <version>${depend.if}</version>
+            <scope>compile</scope>
         </dependency>
 
         <!-- Spigot -->
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.20.4-R0.1-SNAPSHOT</version>
+            <version>${depend.server}</version>
             <scope>provided</scope>
-        </dependency>
-
-        <!-- NBT API -->
-        <dependency>
-            <groupId>de.tr7zw</groupId>
-            <artifactId>item-nbt-api</artifactId>
-            <version>2.12.2</version>
         </dependency>
 
         <!-- Mythic Mobs -->
         <dependency>
             <groupId>io.lumine</groupId>
             <artifactId>Mythic-Dist</artifactId>
-            <version>5.3.5</version>
+            <version>${depend.mythic}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -89,7 +84,7 @@
         <dependency>
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>
-            <version>2.11.5</version>
+            <version>${depend.papi}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -117,13 +112,6 @@
         <repository>
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-        </repository>
-
-        <!-- NBT API -->
-        <repository>
-            <id>codemc-repo</id>
-            <url>https://repo.codemc.org/repository/maven-public/</url>
-            <layout>default</layout>
         </repository>
 
         <!-- Mythic Mobs -->

@@ -6,6 +6,7 @@ import me.unfear.Slayer.listeners.SpawnerSpawnListener;
 import me.unfear.Slayer.mobtypes.MobTypeLoader;
 import me.unfear.Slayer.placeholderapi.PlaceholderHook;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -19,6 +20,9 @@ public class Main extends JavaPlugin {
     private MobTypeLoader mobTypeLoader;
     private SlayerLoader slayerLoader;
     private Language language;
+
+    private final NamespacedKey itemKey = new NamespacedKey(this, "slayer-shop-item-id");
+    private final NamespacedKey entityKey = new NamespacedKey(this, "slayer-from-spawner");
 
     public void onEnable() {
         inst = this;
@@ -69,4 +73,14 @@ public class Main extends JavaPlugin {
     public Language getLanguage() {
         return language;
     }
+
+    public NamespacedKey itemKey() {
+
+        return itemKey;
+    }
+
+    public NamespacedKey entityKey() {
+
+    return entityKey;
+  }
 }

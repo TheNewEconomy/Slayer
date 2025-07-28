@@ -6,7 +6,6 @@ import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import com.github.stefvanschie.inventoryframework.pane.PaginatedPane;
 import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
-import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.unfear.Slayer.Language;
 import me.unfear.Slayer.Main;
 import me.unfear.Slayer.PlayerData;
@@ -17,6 +16,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,21 +24,23 @@ import java.util.List;
 public class SlayerShopMenu {
     private static final Language lang = Main.inst.getLanguage();
 
-    private static ArrayList<ItemStack> getShopItems(PlayerData data) {
-        ArrayList<ItemStack> items = new ArrayList<>();
-        for (ShopItem shopItem : Main.inst.getSlayerLoader().getShopItems()) {
+    private static ArrayList<ItemStack> getShopItems(final PlayerData data) {
+        final ArrayList<ItemStack> items = new ArrayList<>();
+        for (final ShopItem shopItem : Main.inst.getSlayerLoader().getShopItems()) {
             if (!data.getShopItemsPurchased().containsKey(shopItem.getId()))
                 data.getShopItemsPurchased().put(shopItem.getId(), 0);
 
             // can player buy more of this item? if no then don't show it
             if (data.getShopItemsPurchased().getOrDefault(shopItem.getId(), 0) < shopItem.getPurchases()
                     || shopItem.getPurchases() == -1) {
-                ItemStack item = shopItem.createItem();
-                ItemMeta meta = item.getItemMeta();
+                final ItemStack item = shopItem.createItem();
+                final ItemMeta meta = item.getItemMeta();
                 if (meta != null) {
-                    List<String> lore = meta.getLore() == null ? new ArrayList<>() : meta.getLore();
+                    final List<String> lore = meta.getLore() == null? new ArrayList<>() : meta.getLore();
                     if (shopItem.getCost() > data.getPoints()) {
-                        lore.remove(lore.size() - 1);
+                        if(!lore.isEmpty()) {
+                            lore.remove(lore.size() - 1);
+                        }
                         lore.add(Main.inst.getLanguage().tooExpensive());
                     }
                     meta.setLore(lore);
@@ -51,7 +53,7 @@ public class SlayerShopMenu {
         return items;
     }
 
-    public static ChestGui create(Player player, PlayerData data, int page) {
+    public static ChestGui create(final Player player, final PlayerData data, final int page) {
         final ItemStack background = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
         final ItemMeta backgroundMeta = background.getItemMeta();
         if (backgroundMeta != null) {
@@ -90,21 +92,28 @@ public class SlayerShopMenu {
         }
         backButton.setItemMeta(backButtonMeta);
 
-        ChestGui gui = new ChestGui(6, Main.inst.getLanguage().shopGuiTitle());
+        final ChestGui gui = new ChestGui(6, Main.inst.getLanguage().shopGuiTitle());
 
         gui.setOnGlobalClick(event -> event.setCancelled(true));
 
-        PaginatedPane pages = new PaginatedPane(0, 0, 9, 5);
+        final PaginatedPane pages = new PaginatedPane(0, 0, 9, 5);
         pages.populateWithItemStacks(getShopItems(data));
         pages.setOnClick(event -> {
-            if (event.getCurrentItem() == null) return;
+            final ItemStack currentItem = event.getCurrentItem();
+            if (currentItem == null) return;
 
             // purchase item
-            final NBTItem nbt = new NBTItem(event.getCurrentItem());
-            if (!nbt.hasTag(ShopItem.NBT_TAG))
-                return;
-            int id = nbt.getInteger(ShopItem.NBT_TAG);
-            ShopItem shopItem = Main.inst.getSlayerLoader().getShopItem(id);
+            if(!currentItem.hasItemMeta()) return;
+
+            final ItemMeta meta = currentItem.getItemMeta();
+            if(meta == null) return;
+
+            if(!meta.getPersistentDataContainer().has(Main.inst.itemKey(), PersistentDataType.INTEGER)) return;
+
+            final int id = meta.getPersistentDataContainer().getOrDefault(Main.inst.itemKey(), PersistentDataType.INTEGER, -1);
+            if(id == -1) return;
+
+            final ShopItem shopItem = Main.inst.getSlayerLoader().getShopItem(id);
             if (shopItem == null)
                 return;
             // can player buy more of this item? shouldn't be shown, but just in case
@@ -117,7 +126,7 @@ public class SlayerShopMenu {
             // player is able to buy it, so buy it
             data.setPoints(data.getPoints() - shopItem.getCost());
             data.getShopItemsPurchased().put(shopItem.getId(), data.getShopItemsPurchased().get(shopItem.getId()) + 1);
-            for (String command : shopItem.getCommands()) {
+            for (final String command : shopItem.getCommands()) {
                 Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command.replace("%player%", event.getWhoClicked().getName()));
             }
 
@@ -128,7 +137,7 @@ public class SlayerShopMenu {
 
         gui.addPane(pages);
 
-        OutlinePane backgroundPane = new OutlinePane(0, 5, 9, 1);
+        final OutlinePane backgroundPane = new OutlinePane(0, 5, 9, 1);
         backgroundPane.addItem(new GuiItem(background));
         backgroundPane.setRepeat(true);
         backgroundPane.setPriority(Pane.Priority.LOWEST);
@@ -138,7 +147,7 @@ public class SlayerShopMenu {
         pages.setPage(page);
         gui.update();
 
-        StaticPane navigation = new StaticPane(0, 5, 9, 1);
+        final StaticPane navigation = new StaticPane(0, 5, 9, 1);
         if (page > 0) {
             navigation.addItem(new GuiItem(prevArrow, event -> {
                 if (pages.getPage() > 0) {
@@ -155,7 +164,7 @@ public class SlayerShopMenu {
             }), 7, 0);
         }
 
-        String backButtonCommand = Main.inst.getSlayerLoader().getShopBackCommand(player.getName());
+        final String backButtonCommand = Main.inst.getSlayerLoader().getShopBackCommand(player.getName());
         if (!backButtonCommand.equalsIgnoreCase("none")) {
             navigation.addItem(
                     new GuiItem(backButton, event -> Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), backButtonCommand)), 0, 0);

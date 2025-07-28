@@ -1,21 +1,17 @@
 package me.unfear.Slayer.listeners;
 
+import me.unfear.Slayer.Main;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.SpawnerSpawnEvent;
-
-import de.tr7zw.changeme.nbtapi.NBTCompound;
-import de.tr7zw.changeme.nbtapi.NBTEntity;
+import org.bukkit.persistence.PersistentDataType;
 
 public class SpawnerSpawnListener implements Listener {
-	
-	public static final String NBT_TAG = "Slayer.fromSpawner";
 
 	@EventHandler
-	void onSpawn(SpawnerSpawnEvent e) {
-		Entity entity = e.getEntity();
-		NBTCompound nbt = new NBTEntity(entity).getPersistentDataContainer();
-		nbt.setBoolean(NBT_TAG, true);
+	void onSpawn(final SpawnerSpawnEvent e) {
+		final Entity entity = e.getEntity();
+		entity.getPersistentDataContainer().set(Main.inst.entityKey(), PersistentDataType.BOOLEAN, true);
 	}
 }
