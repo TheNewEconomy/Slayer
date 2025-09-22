@@ -10,7 +10,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
 
-        <depend.if>0.11.2</depend.if>
+        <depend.if>0.11.3</depend.if>
         <depend.mythic>5.9.5</depend.mythic>
         <depend.papi>2.11.6</depend.papi>
         <depend.server>1.20.4-R0.1-SNAPSHOT</depend.server>

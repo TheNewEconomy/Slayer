@@ -4,7 +4,7 @@
   <groupId>me.unfear.Slayer</groupId>
   <artifactId>Slayer</artifactId>
   <name>Slayer</name>
-  <version>0.5.3</version>
+  <version>0.5.4</version>
   <build>
     <plugins>
       <plugin>
@@ -91,6 +91,6 @@
     <depend.server>1.20.4-R0.1-SNAPSHOT</depend.server>
     <maven.compiler.target>17</maven.compiler.target>
     <depend.mythic>5.9.5</depend.mythic>
-    <depend.if>0.11.2</depend.if>
+    <depend.if>0.11.3</depend.if>
   </properties>
 </project>
