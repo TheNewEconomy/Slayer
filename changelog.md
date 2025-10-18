@@ -1,6 +1,10 @@
 # Changelog
 
+## 0.5.5
+- Added support for 1.21.9 and 1.21.10
+
 ## 0.5.4
+- updated to 1.21.8
 
 ## 0.5.3
 
