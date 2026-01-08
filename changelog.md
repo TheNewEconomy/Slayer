@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.5.6
+- Added support for 1.21.11
+
 ## 0.5.5
 - Added support for 1.21.9 and 1.21.10
 

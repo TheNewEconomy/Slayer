@@ -3,14 +3,14 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>me.unfear.Slayer</groupId>
     <artifactId>Slayer</artifactId>
-    <version>0.5.5</version>
+    <version>0.5.6</version>
     <name>Slayer</name>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
 
-        <depend.if>0.11.5</depend.if>
+        <depend.if>0.11.6</depend.if>
         <depend.mythic>5.9.5</depend.mythic>
         <depend.papi>2.11.6</depend.papi>
         <depend.server>1.20.4-R0.1-SNAPSHOT</depend.server>
