@@ -6,6 +6,7 @@ import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import com.github.stefvanschie.inventoryframework.pane.PaginatedPane;
 import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
+import com.github.stefvanschie.inventoryframework.pane.util.Slot;
 import me.unfear.Slayer.Language;
 import me.unfear.Slayer.Main;
 import me.unfear.Slayer.PlayerData;
@@ -96,7 +97,7 @@ public class SlayerShopMenu {
 
         gui.setOnGlobalClick(event -> event.setCancelled(true));
 
-        final PaginatedPane pages = new PaginatedPane(0, 0, 9, 5);
+        final PaginatedPane pages = new PaginatedPane(9, 5, Pane.Priority.NORMAL);
         pages.populateWithItemStacks(getShopItems(data));
         pages.setOnClick(event -> {
             final ItemStack currentItem = event.getCurrentItem();
@@ -135,19 +136,19 @@ public class SlayerShopMenu {
 
         });
 
-        gui.addPane(pages);
+        gui.addPane(Slot.fromXY(0, 0), pages);
 
-        final OutlinePane backgroundPane = new OutlinePane(0, 5, 9, 1);
+        final OutlinePane backgroundPane = new OutlinePane(9, 1, Pane.Priority.NORMAL);
         backgroundPane.addItem(new GuiItem(background));
         backgroundPane.setRepeat(true);
         backgroundPane.setPriority(Pane.Priority.LOWEST);
 
-        gui.addPane(backgroundPane);
+        gui.addPane(Slot.fromXY(0, 5), backgroundPane);
 
         pages.setPage(page);
         gui.update();
 
-        final StaticPane navigation = new StaticPane(0, 5, 9, 1);
+        final StaticPane navigation = new StaticPane(9, 1, Pane.Priority.NORMAL);
         if (page > 0) {
             navigation.addItem(new GuiItem(prevArrow, event -> {
                 if (pages.getPage() > 0) {
@@ -173,7 +174,7 @@ public class SlayerShopMenu {
         navigation.addItem(
                 new GuiItem(points), 4, 0);
 
-        gui.addPane(navigation);
+        gui.addPane(Slot.fromXY(0, 5), navigation);
 
         return gui;
     }

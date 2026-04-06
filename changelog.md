@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.7
+- Added support for 26.1
+- Replaced deprecated methods in IF.
+
 ## 0.5.6
 - Added support for 1.21.11
 

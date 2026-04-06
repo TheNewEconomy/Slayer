@@ -5,6 +5,7 @@ import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
+import com.github.stefvanschie.inventoryframework.pane.util.Slot;
 import me.unfear.Slayer.Language;
 import me.unfear.Slayer.Main;
 import me.unfear.Slayer.PlayerData;
@@ -20,7 +21,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class SlayerMenu {
     private static final Language lang = Main.inst.getLanguage();
 
-    public static ChestGui create(Player player, PlayerData data) {
+    public static ChestGui create(final Player player, final PlayerData data) {
         final ItemStack background = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
         final ItemMeta backgroundMeta = background.getItemMeta();
         if (backgroundMeta != null) {
@@ -29,7 +30,7 @@ public class SlayerMenu {
         }
 
         // display some information
-        String currentTask = (data.getCurrentTask() == null ? "None" : data.getCurrentTask().getName());
+        final String currentTask = (data.getCurrentTask() == null? "None" : data.getCurrentTask().getName());
         final ItemStack profile = new ItemStack(Material.BIRCH_SIGN);
         final ItemMeta profileMeta = profile.getItemMeta();
         if (profileMeta != null) {
@@ -98,13 +99,13 @@ public class SlayerMenu {
 
         gui.setOnGlobalClick(event -> event.setCancelled(true));
 
-        final OutlinePane backgroundPane = new OutlinePane(0, 0, 9, 3, Priority.LOWEST);
+        final OutlinePane backgroundPane = new OutlinePane(9, 3, Priority.LOWEST);
         backgroundPane.addItem(new GuiItem(background));
         backgroundPane.setRepeat(true);
-        gui.addPane(backgroundPane);
+        gui.addPane(Slot.fromXY(0, 0), backgroundPane);
 
-        final StaticPane main = new StaticPane(0, 0, 9, 3);
-        String backButtonCommand = Main.inst.getSlayerLoader().getMainBackCommand(player.getName());
+        final StaticPane main = new StaticPane(9, 3, Priority.NORMAL);
+        final String backButtonCommand = Main.inst.getSlayerLoader().getMainBackCommand(player.getName());
         if (!backButtonCommand.equalsIgnoreCase("none")) {
             main.addItem(
                     new GuiItem(backButton, event -> Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), backButtonCommand)), 0, 2);
@@ -129,7 +130,7 @@ public class SlayerMenu {
         if (data.getCurrentTask() != null)
             main.addItem(new GuiItem(current), 1, 1);
 
-        gui.addPane(main);
+        gui.addPane(Slot.fromXY(0, 0), main);
 
         return gui;
     }

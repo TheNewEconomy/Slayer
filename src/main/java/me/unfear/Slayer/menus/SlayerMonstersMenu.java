@@ -6,6 +6,7 @@ import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import com.github.stefvanschie.inventoryframework.pane.PaginatedPane;
 import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
+import com.github.stefvanschie.inventoryframework.pane.util.Slot;
 import me.unfear.Slayer.Language;
 import me.unfear.Slayer.Main;
 import me.unfear.Slayer.PlayerData;
@@ -25,9 +26,9 @@ import java.util.Map.Entry;
 public class SlayerMonstersMenu {
     private static final Language lang = Main.inst.getLanguage();
 
-    private static ArrayList<ItemStack> getMonsterItems(PlayerData data) {
-        ArrayList<ItemStack> items = new ArrayList<>();
-        for (Entry<Integer, Integer> entry : data.getEntityKills().entrySet()) {
+    private static ArrayList<ItemStack> getMonsterItems(final PlayerData data) {
+        final ArrayList<ItemStack> items = new ArrayList<>();
+        for (final Entry<Integer, Integer> entry : data.getEntityKills().entrySet()) {
             final MobType mobType = Main.inst.getMobTypeLoader().getMobType(entry.getKey());
             final ItemStack item = new ItemStack(mobType.getMaterial());
             final ItemMeta meta = item.getItemMeta();
@@ -42,7 +43,7 @@ public class SlayerMonstersMenu {
         return items;
     }
 
-    public static ChestGui create(Player player, PlayerData data, int page) {
+    public static ChestGui create(final Player player, final PlayerData data, final int page) {
         final ItemStack background = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
         final ItemMeta backgroundMeta = background.getItemMeta();
         if (backgroundMeta != null) {
@@ -72,26 +73,26 @@ public class SlayerMonstersMenu {
             backButton.setItemMeta(slayerMasterMeta);
         }
 
-        ChestGui gui = new ChestGui(6, lang.monsterGuiTitle());
+        final ChestGui gui = new ChestGui(6, lang.monsterGuiTitle());
 
         gui.setOnGlobalClick(event -> event.setCancelled(true));
 
-        PaginatedPane pages = new PaginatedPane(0, 0, 9, 5);
+        final PaginatedPane pages = new PaginatedPane(9, 5, Pane.Priority.NORMAL);
         pages.populateWithItemStacks(getMonsterItems(data));
 
-        gui.addPane(pages);
+        gui.addPane(Slot.fromXY(0, 0), pages);
 
-        OutlinePane backgroundPane = new OutlinePane(0, 5, 9, 1);
+        final OutlinePane backgroundPane = new OutlinePane(9, 1, Pane.Priority.NORMAL);
         backgroundPane.addItem(new GuiItem(background));
         backgroundPane.setRepeat(true);
         backgroundPane.setPriority(Pane.Priority.LOWEST);
 
-        gui.addPane(backgroundPane);
+        gui.addPane(Slot.fromXY(0, 5), backgroundPane);
 
         pages.setPage(page);
         gui.update();
 
-        StaticPane navigation = new StaticPane(0, 5, 9, 1);
+        final StaticPane navigation = new StaticPane(9, 1, Pane.Priority.NORMAL);
         if (page > 0) {
             navigation.addItem(new GuiItem(prevArrow, event -> {
                 if (pages.getPage() > 0) {
@@ -108,13 +109,13 @@ public class SlayerMonstersMenu {
             }), 8, 0);
         }
 
-        String backButtonCommand = Main.inst.getSlayerLoader().getMonstersBackCommand(player.getName());
+        final String backButtonCommand = Main.inst.getSlayerLoader().getMonstersBackCommand(player.getName());
         if (!backButtonCommand.equalsIgnoreCase("none")) {
             navigation.addItem(
                     new GuiItem(backButton, event -> Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), backButtonCommand)), 0, 2);
         }
 
-        gui.addPane(navigation);
+        gui.addPane(Slot.fromXY(0, 5), navigation);
 
         return gui;
     }
